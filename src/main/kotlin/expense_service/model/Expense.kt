@@ -23,10 +23,10 @@ class Expense(
     val type: String,
 
     @Column(nullable = false)
-    val date: String, // dd/MM/yyyy
+    val date: String, 
 
     @Column(nullable = false)
-    val amount: Int, // CLP
+    val amount: Int, 
 
     @Column
     val km: Int? = null,
