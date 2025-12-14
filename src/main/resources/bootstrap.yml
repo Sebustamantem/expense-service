@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: expense-service
+  cloud:
+    config:
+      uri: https://config-server-bph7.onrender.com
+      enabled: true
