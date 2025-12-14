@@ -1,13 +1,14 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: expense-service
 
+  config:
+    import: "optional:configserver:https://config-server-bph7.onrender.com"
+
   cloud:
     config:
       enabled: true
-
-  config:
-    import: "configserver:https://config-server-bph7.onrender.com"
-
-server:
-  port: 8080
+      fail-fast: false
