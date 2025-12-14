@@ -1,4 +1,4 @@
-package expense_service
+package com.example.expense
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class ExpenseServiceApplication
 
 fun main(args: Array<String>) {
-	runApplication<ExpenseServiceApplication>(*args)
+    runApplication<ExpenseServiceApplication>(*args)
 }
