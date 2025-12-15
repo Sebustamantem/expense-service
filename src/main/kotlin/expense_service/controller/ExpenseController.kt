@@ -8,40 +8,30 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/expenses")
+@RequestMapping("/api/expenses")
 class ExpenseController(
     private val service: ExpenseService
 ) {
 
-    // CREATE
     @PostMapping
-    fun create(@RequestBody request: ExpenseRequest): ResponseEntity<ExpenseResponse> {
-        val created = service.create(request)
-        return ResponseEntity.status(HttpStatus.CREATED).body(created)
-    }
+    fun create(@RequestBody request: ExpenseRequest): ResponseEntity<ExpenseResponse> =
+        ResponseEntity.status(HttpStatus.CREATED).body(service.create(request))
 
-    // LIST BY VEHICLE
     @GetMapping("/vehicle/{vehicleId}")
-    fun listByVehicle(@PathVariable vehicleId: Long): ResponseEntity<List<ExpenseResponse>> {
-        return ResponseEntity.ok(service.listByVehicle(vehicleId))
-    }
+    fun listByVehicle(@PathVariable vehicleId: Long): ResponseEntity<List<ExpenseResponse>> =
+        ResponseEntity.ok(service.listByVehicle(vehicleId))
 
-    // GET BY ID (opcional, pero útil)
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): ResponseEntity<ExpenseResponse> {
-        return ResponseEntity.ok(service.getById(id))
-    }
+    fun getById(@PathVariable id: Long): ResponseEntity<ExpenseResponse> =
+        ResponseEntity.ok(service.getById(id))
 
-    // UPDATE
     @PutMapping("/{id}")
     fun update(
         @PathVariable id: Long,
         @RequestBody request: ExpenseRequest
-    ): ResponseEntity<ExpenseResponse> {
-        return ResponseEntity.ok(service.update(id, request))
-    }
+    ): ResponseEntity<ExpenseResponse> =
+        ResponseEntity.ok(service.update(id, request))
 
-    // DELETE
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long): ResponseEntity<Void> {
         service.delete(id)
