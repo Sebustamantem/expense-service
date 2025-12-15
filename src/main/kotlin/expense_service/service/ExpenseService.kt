@@ -1,9 +1,10 @@
 package com.example.expense.service
 
-import org.springframework.stereotype.Service
-import com.example.expense.repository.ExpenseRepository
-import com.example.expense.dto.*
+import com.example.expense.dto.ExpenseRequest
+import com.example.expense.dto.ExpenseResponse
 import com.example.expense.model.Expense
+import com.example.expense.repository.ExpenseRepository
+import org.springframework.stereotype.Service
 
 @Service
 class ExpenseService(
@@ -11,7 +12,7 @@ class ExpenseService(
 ) {
 
     fun create(request: ExpenseRequest): ExpenseResponse {
-        val expense = repository.save(
+        val saved = repository.save(
             Expense(
                 vehicleId = request.vehicleId,
                 vehiclePlate = request.vehiclePlate,
@@ -23,19 +24,26 @@ class ExpenseService(
                 notes = request.notes
             )
         )
+        return saved.toResponse()
+    }
+
+    fun listByVehicle(vehicleId: Long): List<ExpenseResponse> {
+        return repository.findByVehicleId(vehicleId).map { it.toResponse() }
+    }
+
+    fun getById(id: Long): ExpenseResponse {
+        val expense = repository.findById(id)
+            .orElseThrow { RuntimeException("Expense not found") }
         return expense.toResponse()
     }
 
-    fun listByVehicle(vehicleId: Long): List<ExpenseResponse> =
-        repository.findByVehicleId(vehicleId).map { it.toResponse() }
-
     fun update(id: Long, request: ExpenseRequest): ExpenseResponse {
-        val expense = repository.findById(id)
+        val existing = repository.findById(id)
             .orElseThrow { RuntimeException("Expense not found") }
 
-        val updated = repository.save(
+        val saved = repository.save(
             Expense(
-                id = expense.id,
+                id = existing.id,
                 vehicleId = request.vehicleId,
                 vehiclePlate = request.vehiclePlate,
                 category = request.category,
@@ -46,14 +54,19 @@ class ExpenseService(
                 notes = request.notes
             )
         )
-        return updated.toResponse()
+        return saved.toResponse()
     }
 
     fun delete(id: Long) {
+        // (opcional) validar existencia antes de borrar
+        if (!repository.existsById(id)) {
+            throw RuntimeException("Expense not found")
+        }
         repository.deleteById(id)
     }
 
-    private fun Expense.toResponse() = ExpenseResponse(
+    // Mapper interno
+    private fun Expense.toResponse(): ExpenseResponse = ExpenseResponse(
         id = id,
         vehicleId = vehicleId,
         vehiclePlate = vehiclePlate,
